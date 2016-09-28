@@ -5,7 +5,7 @@ PHP-SBCS
 <a href="http://getbootstrap.com"><img src="https://img.shields.io/badge/bootstrap-3.3.7-blue.svg" /></a>
 <a href="http://jquery.com"><img src="https://img.shields.io/badge/jquery-3.1.0-blue.svg" /></a>
 <a href="https://codeclimate.com/github/ganbarli/PHP-SBCS"><img src="https://codeclimate.com/github/ganbarli/PHP-SBCS/badges/gpa.svg" /></a>
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4c5ed8aa57ac487a9d8b60f1d5b0d580)](https://www.codacy.com/app/ganbarli/PHP-SBCS?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ganbarli/PHP-SBCS&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4c5ed8aa57ac487a9d8b60f1d5b0d580)](https://www.codacy.com/app/ganbarli/PHP-SBCS)
 
 
 PHP Session Based Cart System is pretty simple and fast way for listing small amount of products.
@@ -39,6 +39,11 @@ Change Log
 ========
 
 For the most recent change log, please follow here. I try to add detailed release notes to each new release. **Please remember to STAR this project** and FOLLOW me to keep you update with this project.
+
+######PHP-SBCS v1.6 / 28.09.2016
+
+- PHP reporting set to E_ALL for easy debugging
+- PHP short open tags converted to <?php
 
 ######PHP-SBCS v1.5 / 06.09.2016
 
