@@ -4,8 +4,9 @@ PHP-SBCS
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
 <a href="http://getbootstrap.com"><img src="https://img.shields.io/badge/bootstrap-3.3.7-blue.svg" /></a>
 <a href="http://jquery.com"><img src="https://img.shields.io/badge/jquery-3.1.0-blue.svg" /></a>
+<img src="https://camo.githubusercontent.com/0663341d6fe5b56c35f83ee4e6d17377925cb4b1/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c616e67756167652d5048502d626c75652e7376673f6d61784167653d32353932303030">
 <a href="https://codeclimate.com/github/ganbarli/PHP-SBCS"><img src="https://codeclimate.com/github/ganbarli/PHP-SBCS/badges/gpa.svg" /></a>
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4c5ed8aa57ac487a9d8b60f1d5b0d580)](https://www.codacy.com/app/ganbarli/PHP-SBCS)
+<a href="https://www.codacy.com/app/ganbarli/PHP-SBCS?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ganbarli/PHP-SBCS&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/eb51bc527c04437292f84cc6500a0825"/></a>
 
 
 PHP Session Based Cart System is pretty simple and fast way for listing small amount of products.
