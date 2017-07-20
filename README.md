@@ -41,12 +41,19 @@ Change Log
 
 For the most recent change log, please follow here. I try to add detailed release notes to each new release. **Please remember to STAR this project** and FOLLOW me to keep you update with this project.
 
-######PHP-SBCS v1.6 / 28.09.2016
+Version History
+========
+
+**v1.6.1 / 21.07.2017**
+
+- Minor update for showing total quantity.
+
+**v1.6 / 28.09.2016**
 
 - PHP reporting set to E_ALL for easy debugging
 - PHP short open tags converted to <?php
 
-######PHP-SBCS v1.5 / 06.09.2016
+**v1.5 / 06.09.2016**
 
 - Jquery updated to version 3.1.0
 - Footer changed
@@ -54,7 +61,7 @@ For the most recent change log, please follow here. I try to add detailed releas
 - GitHub page link added
 - Product listing with thumbnails example added
 
-######PHP-SBCS v1.4 / 04.09.2016
+**v1.4 / 04.09.2016**
 
 - All system is now in one file
 - Bootstrap updated to version 3.3.7
@@ -64,15 +71,15 @@ For the most recent change log, please follow here. I try to add detailed releas
 - Navbar fixed changed to navbar default
 - Offcanvas removed
 
-######PHP-SBCS v1.3 / 26.11.2015
+**v1.3 / 26.11.2015**
 
 - For calculating total values with decimals, we made a minor update.
 
-######PHP-SBCS v1.2 / 31.10.2015
+**v1.2 / 31.10.2015**
 
 - Item remove from basket function is completely changed. Now when you remove an item from basket, system changes its quantity to 0. And we don't list 0 quantity items in basket.
 
-######PHP-SBCS v1.1 / 01.10.2013
+**v1.1 / 01.10.2013**
 
 - Initial Commit
 
