@@ -9,7 +9,7 @@ session_start();
 $currency = "$";
 
 $msg = "";
-$v = "1.6";
+$v = "1.6.1";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -362,6 +362,7 @@ $v = "1.6";
 
 							$pricedecimal = (float)$pricedecimal; 
 							$qtydecimal = (float)$qtydecimal; 
+							$qtydecimaltotal = $qtydecimaltotal + $qtydecimal;
 
 							$totaldecimal = $pricedecimal*$qtydecimal;								
 								
@@ -392,7 +393,8 @@ $v = "1.6";
 						?>
 						<tr class='tableactive'>
 							<td><a href='?clear' class='btn btn-danger btn-xs' onclick="return confirm('Are you sure?')">Empty Cart</a></td>
-							<td colspan='2' class='text-right'>Total</td>
+							<td class='text-right'>Total</td>
+							<td><?php echo $qtydecimaltotal;?></td>
 							<td><?php echo $total;?> <?php echo $currency;?></td>
 						</tr>
 					</table>
