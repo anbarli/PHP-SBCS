@@ -44,6 +44,10 @@ For the most recent change log, please follow here. I try to add detailed releas
 Version History
 ========
 
+**v.1.6.2 / 22.10.2017**
+
+- jquery version upgraded from 3.1.0 to 3.2.1 and script revised for working under https.
+
 **v1.6.1 / 21.07.2017**
 
 - Minor update for showing total quantity.
