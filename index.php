@@ -20,13 +20,13 @@ $v = "1.6.1";
     <meta name="author" content="anbarli.org">
 
     <title>PHP-SBCS / Session Based Cart System</title>
-	
+
     <!-- Bootstrap core CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 	<script language="Javascript">
 	<!-- Allows only numeric chars -->
-	function isNumberKey(evt) 
+	function isNumberKey(evt)
 	{
 		var charCode=(evt.which)?evt.which:event.keyCode
 		if(charCode>31&&(charCode<48||charCode>57))
@@ -44,7 +44,7 @@ $v = "1.6.1";
 
 	<?php
 	// Add item to cart
-	if (empty($_POST['item']) || empty($_POST['price']) || empty($_POST['quantity'])) 
+	if (empty($_POST['item']) || empty($_POST['price']) || empty($_POST['quantity']))
 	{ } else {
 
 		# Take values
@@ -52,10 +52,8 @@ $v = "1.6.1";
 		$SBCSitem = $_POST['item'];
 		$SBCSquantity = $_POST['quantity'];
 		$SBCSuniquid = rand();
-		
 		$SBCSexist = false;
 		$SBCScount = 0;
-		
 		// If SESSION Generated?
 		if($_SESSION['SBCScart']!="")
 		{
@@ -70,14 +68,11 @@ $v = "1.6.1";
 				$SBCScount++;
 			}
 		}
-		
 		// If we found same item
 		if($SBCSexist)
 		{
-		
 			// Update quantity
 			$_SESSION['SBCScart'][$SBCScount]['quantity'] += $SBCSquantity;
-			
 			// Write down the message and then we open in modal at the bottom
 			$msg = "
 			<script type=\"text/javascript\">
@@ -85,11 +80,11 @@ $v = "1.6.1";
 					$('#myDialogText').text('".$SBCSitem." quantity updated..');
 					$('#modal-cart').modal('show');
 				});
-			</script>			
+			</script>
 			";
-			
+
 		} else {
-		
+
 			// If we do not found, insert new
 			$SBCSmycartrow = array(
 				'item' => $SBCSitem,
@@ -97,33 +92,32 @@ $v = "1.6.1";
 				'quantity' => $SBCSquantity,
 				'id' => $SBCSuniquid
 			);
-			
+
 			// If session not exist, create
 			if (!isset($_SESSION['SBCScart']))
 				$_SESSION['SBCScart'] = array();
 
 			// Add item to cart
 			$_SESSION['SBCScart'][] = $SBCSmycartrow;
-			
+
 			// Write down the message and then we open in modal at the bottom
 			$msg = "
 			<script type=\"text/javascript\">
 				$(document).ready(function(){
 					$('#myDialogText').text('".$SBCSitem." added to your cart');
 					$('#modal-cart').modal('show');
-				}); 
-			</script>			
+				});
+			</script>
 			";
-		
+
 		}
 	}
 
 	// Clear cart
-	if(isset($_GET["clear"])) 
-	{ 
+	if(isset($_GET["clear"]))
+	{
 		session_unset();
-		session_destroy(); 
-		
+		session_destroy();
 		// Write down the message and then we open in modal at the bottom
 		$msg = "
 		<script type=\"text/javascript\">
@@ -131,15 +125,15 @@ $v = "1.6.1";
 				$('#myDialogText').text('Your cart is empty now..');
 				$('#modal-cart').modal('show');
 			});
-		</script>			
-		";		
+		</script>
+		";
 	}
 
 	// Remove item from cart (Updating quantity to 0)
 	$remove = isset($_GET['remove']) ? $_GET['remove'] : '';
-	if($remove!="") 
-	{ 
-	  $_SESSION['SBCScart'][$_GET["remove"]]['quantity'] = 0;
+	if($remove!="")
+	{
+		$_SESSION['SBCScart'][$_GET["remove"]]['quantity'] = 0;
 	}
 	?>
 
@@ -168,11 +162,9 @@ $v = "1.6.1";
           <p class="pull-right visible-xs">
             <button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-shopping-cart"></span> My Cart</button>
           </p>
-		  
           <div class="jumbotron">
             <p>PHP Session Based Cart System is pretty simple and fast way for listing small amount of products. This script lists manually added products, you can add that products to your shopping cart, remove them, change quantity via sessions. This script doesn't include any payment method or payment page.</p>
           </div><!-- /.jumbotron -->
-		  
           <div class="col-sm-13">
 			<?php if(isset($_GET["pay"])) { ?>
 			<div class="panel panel-success">
@@ -186,8 +178,7 @@ $v = "1.6.1";
 				<?php echo $_POST["OrderDetail"];?>
 			  </div>
 			</div><!-- /.panel -->
-			<?php } ?>	
-			
+			<?php } ?>
 			<!-- Products Group -->
 			<div class="panel panel-default">
 			  <div class="panel-heading"><span class="glyphicon  glyphicon-cutlery"></span> Products Group</div>
@@ -195,8 +186,8 @@ $v = "1.6.1";
 				<!-- Product 1 -->
 				<li class="list-group-item">
 					<form action="?" method="post">
-						<input type="submit" name="ok" value="+" class="btn btn-success btn-xs"> 
-						<input class="form-control quantity" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1"> Product 1 
+						<input type="submit" name="ok" value="+" class="btn btn-success btn-xs">
+						<input class="form-control quantity" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1"> Product 1
 						<span class="pull-right">1.10 <?php echo $currency;?></span>
 						<input type="hidden" name="item" value="Product 1" />
 						<input type="hidden" name="price" value="1.10" />
@@ -205,8 +196,8 @@ $v = "1.6.1";
 				<!-- Product 2 -->
 				<li class="list-group-item">
 					<form action="?" method="post">
-						<input type="submit" name="ok" value="+" class="btn btn-success btn-xs"> 
-						<input class="form-control quantity" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1"> Product 2 
+						<input type="submit" name="ok" value="+" class="btn btn-success btn-xs">
+						<input class="form-control quantity" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1"> Product 2
 						<span class="pull-right">1.20 <?php echo $currency;?></span>
 						<input type="hidden" name="item" value="Product 2" />
 						<input type="hidden" name="price" value="1.20" />
@@ -215,23 +206,23 @@ $v = "1.6.1";
 				<!-- Product 3 -->
 				<li class="list-group-item">
 					<form action="?" method="post">
-						<input type="submit" name="ok" value="+" class="btn btn-success btn-xs"> 
-						<input class="form-control quantity" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1"> Product 3 
+						<input type="submit" name="ok" value="+" class="btn btn-success btn-xs">
+						<input class="form-control quantity" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1"> Product 3
 						<span class="pull-right">1.30 <?php echo $currency;?></span>
 						<input type="hidden" name="item" value="Product 3" />
 						<input type="hidden" name="price" value="1.30" />
 					</form>
 				</li>
 			  </ul>
-			</div>	
+			</div>
 			<!-- // Products Group -->
-			
+
 			<!-- Products List W/Thumbs -->
 			<div class="row">
 				<!-- Product 4 -->
 				<div class="col-xs-6 col-md-3">
 					<div class="thumbnail text-center">
-						<img src="http://placehold.it/150x150" class="img-responsive" alt="Product 4">
+						<img src="https://placehold.it/150x150" class="img-responsive" alt="Product 4">
 						<div class="caption text-center">
 							<h3>Product 4</h3>
 							<span class="label label-warning">2.10 <?php echo $currency;?></span>
@@ -239,17 +230,17 @@ $v = "1.6.1";
 						<form action="?" method="post">
 							<div class = "input-group">
 							<input class="form-control" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1">
-							<span class = "input-group-btn"><input type="submit" class="btn btn-success" type="button" value="Add To Basket"></span>	
+							<span class = "input-group-btn"><input type="submit" class="btn btn-success" type="button" value="Add To Basket"></span>
 							</div>
 							<input type="hidden" name="item" value="Product 4" />
 							<input type="hidden" name="price" value="2.10" />
-						</form>		
+						</form>
 					</div>
 				</div>
 				<!-- Product 5 -->
 				<div class="col-xs-6 col-md-3">
 					<div class="thumbnail text-center">
-						<img src="http://placehold.it/150x150" class="img-responsive" alt="Product 4">
+						<img src="https://placehold.it/150x150" class="img-responsive" alt="Product 4">
 						<div class="caption text-center">
 							<h3>Product 5</h3>
 							<span class="label label-warning">2.20 <?php echo $currency;?></span>
@@ -257,17 +248,17 @@ $v = "1.6.1";
 						<form action="?" method="post">
 							<div class = "input-group">
 							<input class="form-control" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1">
-							<span class = "input-group-btn"><input type="submit" class="btn btn-success" type="button" value="Add To Basket"></span>	
+							<span class = "input-group-btn"><input type="submit" class="btn btn-success" type="button" value="Add To Basket"></span>
 							</div>
 							<input type="hidden" name="item" value="Product 5" />
 							<input type="hidden" name="price" value="2.20" />
-						</form>		
+						</form>
 					</div>
 				</div>
 				<!-- Product 6 -->
 				<div class="col-xs-6 col-md-3">
 					<div class="thumbnail text-center">
-						<img src="http://placehold.it/150x150" class="img-responsive" alt="Product 4">
+						<img src="https://placehold.it/150x150" class="img-responsive" alt="Product 4">
 						<div class="caption text-center">
 							<h3>Product 6</h3>
 							<span class="label label-warning">2.30 <?php echo $currency;?></span>
@@ -275,17 +266,17 @@ $v = "1.6.1";
 						<form action="?" method="post">
 							<div class = "input-group">
 							<input class="form-control" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1">
-							<span class = "input-group-btn"><input type="submit" class="btn btn-success" type="button" value="Add To Basket"></span>	
+							<span class = "input-group-btn"><input type="submit" class="btn btn-success" type="button" value="Add To Basket"></span>
 							</div>
 							<input type="hidden" name="item" value="Product 6" />
 							<input type="hidden" name="price" value="2.30" />
-						</form>		
+						</form>
 					</div>
 				</div>
 				<!-- Product 7 -->
 				<div class="col-xs-6 col-md-3">
 					<div class="thumbnail text-center">
-						<img src="http://placehold.it/150x150" class="img-responsive" alt="Product 4">
+						<img src="https://placehold.it/150x150" class="img-responsive" alt="Product 4">
 						<div class="caption text-center">
 							<h3>Product 7</h3>
 							<span class="label label-warning">2.40 <?php echo $currency;?></span>
@@ -293,24 +284,24 @@ $v = "1.6.1";
 						<form action="?" method="post">
 							<div class = "input-group">
 							<input class="form-control" name="quantity" type="text" onkeypress="return isNumberKey(event)" maxlength="2" value="1">
-							<span class = "input-group-btn"><input type="submit" class="btn btn-success" type="button" value="Add To Basket"></span>	
+							<span class = "input-group-btn"><input type="submit" class="btn btn-success" type="button" value="Add To Basket"></span>
 							</div>
 							<input type="hidden" name="item" value="Product 7" />
 							<input type="hidden" name="price" value="2.40" />
-						</form>		
+						</form>
 					</div>
 				</div>
 			</div>
 			<!-- // Products List W/Thumbs -->
-			
+
           </div><!--/row-->
         </div><!--/span-->
 
         <div class="col-xs-6 col-sm-4" id="sidebar" role="navigation">
           <div class="sidebar-nav">
-			<?php 
+			<?php
 			// If cart is empty
-			if (!isset($_SESSION['SBCScart']) || (count($_SESSION['SBCScart']) == 0)) { 
+			if (!isset($_SESSION['SBCScart']) || (count($_SESSION['SBCScart']) == 0)) {
 			?>
 				<div class="panel panel-default">
 				  <div class="panel-heading">
@@ -318,7 +309,7 @@ $v = "1.6.1";
 				  </div>
 				  <div class="panel-body">Your cart is empty..</div>
 				</div>
-			<?php 
+			<?php
 			// If cart is not empty
 			} else {
 			?>
@@ -343,34 +334,34 @@ $v = "1.6.1";
 								</tr>
 							</thead>
 							<tbody>';
-						
+
 						// Equal total to 0
 						$total = 0;
-						
+
 						// For finding session elements line number
 						$linenumber = 0;
-						
-						// Run loop for cart array 
-						foreach($_SESSION['SBCScart'] as $SBCSitem) 
+
+						// Run loop for cart array
+						foreach($_SESSION['SBCScart'] as $SBCSitem)
 						{
 							// Don't list items with 0 qty
 							if($SBCSitem['quantity']!=0) {
-								
-							// For calculating total values with decimals
-							$pricedecimal = str_replace(",",".",$SBCSitem['unitprice']); 
-							$qtydecimal = str_replace(",",".",$SBCSitem['quantity']); 
 
-							$pricedecimal = (float)$pricedecimal; 
-							$qtydecimal = (float)$qtydecimal; 
+							// For calculating total values with decimals
+							$pricedecimal = str_replace(",",".",$SBCSitem['unitprice']);
+							$qtydecimal = str_replace(",",".",$SBCSitem['quantity']);
+
+							$pricedecimal = (float)$pricedecimal;
+							$qtydecimal = (float)$qtydecimal;
 							$qtydecimaltotal = $qtydecimaltotal + $qtydecimal;
 
-							$totaldecimal = $pricedecimal*$qtydecimal;								
-								
+							$totaldecimal = $pricedecimal*$qtydecimal;
+
 							// We store order detail in HTML
 							$OrderDetail .= "<tr><td>".$SBCSitem['item']."</td><td>".$SBCSitem['unitprice']." ".$currency."</td><td>".$SBCSitem['quantity']."</td><td>".$totaldecimal." ".$currency."</td></tr>";
-							
+
 							// Write cart to screen
-							echo 
+							echo
 							"
 							<tr class='tablerow'>
 								<td><a href=\"?remove=".$linenumber."\" class=\"btn btn-danger btn-xs\" onclick=\"return confirm('Are you sure?')\">X</a> ".$SBCSitem['item']."</td>
@@ -379,17 +370,17 @@ $v = "1.6.1";
 								<td>".$totaldecimal." ".$currency."</td>
 							</tr>
 							";
-							
+
 							// Total
 							$total += $totaldecimal;
-							
+
 							}
 							$linenumber++;
 						}
-						
+
 						// We store order detail in HTML
 						$OrderDetail .= "<tr><td>Total</td><td></td><td></td><td>".$total." ".$currency."</td></tr></tbody></table>";
-						
+
 						?>
 						<tr class='tableactive'>
 							<td><a href='?clear' class='btn btn-danger btn-xs' onclick="return confirm('Are you sure?')">Empty Cart</a></td>
@@ -401,7 +392,7 @@ $v = "1.6.1";
 					</div>
 				</div>
 				<!-- // Cart -->
-				
+
 				<!-- Address -->
 				<div class="panel panel-default">
 				  <div class="panel-heading">
@@ -420,7 +411,7 @@ $v = "1.6.1";
 						<div>
 						  <input type="email" name="email" class="form-control" id="inputEmail2" placeholder="mail@domain.com">
 						</div>
-					  </div>					  
+					  </div>
 					  <div class="form-group">
 						<label for="inputEmail3">Phone</label>
 						<div>
@@ -432,7 +423,7 @@ $v = "1.6.1";
 						<div>
 						  <textarea class="form-control" name="address" id="inputEmail4" style="height:50px;"></textarea>
 						</div>
-					  </div>		  
+					  </div>
 					  <div class="form-group">
 						<label for="optionsRadios1">Payment</label>
 						<div style="margin-top: 6px;">
@@ -453,12 +444,12 @@ $v = "1.6.1";
 				  </div>
 				</div>
 				<!-- // Address -->
-				
+
 			<?php } # End Cart Listing ?>
           </div><!--/.well -->
         </div><!--/span-->
       </div><!--/row-->
-	  
+
       <hr>
 
       <footer>
@@ -466,7 +457,7 @@ $v = "1.6.1";
       </footer>
 
     </div><!--/.container-->
-		
+
 	<div id="modal-cart" class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -479,10 +470,21 @@ $v = "1.6.1";
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-	<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-	
+	<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 	<?php if($msg != "") { echo $msg; } ?>
-	
+
+	<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-928914-3', 'anbarli.org');
+	ga('send', 'pageview');
+
+	</script>
+
   </body>
 </html>
