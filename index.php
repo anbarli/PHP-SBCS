@@ -9,7 +9,7 @@ session_start();
 $currency = "$";
 
 $msg = "";
-$v = "1.6.1";
+$v = "1.6.2";
 ?>
 <!DOCTYPE html>
 <html lang="en">
