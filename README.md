@@ -73,4 +73,4 @@ This project is suitable for educational and lightweight e-commerce cases.
 
 ---
 
-Demo : <a href="http://www.anbarli.org/PHP-SBCS/">http://www.anbarli.org/PHP-SBCS/</a>
+Demo : <a href="https://www.anbarli.com.tr/PHP-SBCS/">https://www.anbarli.com.tr/PHP-SBCS/</a>
