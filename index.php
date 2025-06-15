@@ -4,6 +4,8 @@ declare(strict_types=1);
 error_reporting(E_ALL);
 session_start();
 
+$demo_mode = true; // DEMO: Gerçek kayıt yapılmasın
+
 function getCsrfToken(): string {
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -52,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action_type'] ?? '') === '
     $payment = sanitize($_POST['payment'] ?? '');
 
     if (!$name || !filter_var($email, FILTER_VALIDATE_EMAIL) || !$address || !$payment) {
-        $msg = "Please fill in all required fields correctly.";
+        $msg = "Lütfen tüm gerekli alanları doğru şekilde doldurun.";
     } else {
         $order = [
             'name' => $name,
@@ -64,16 +66,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action_type'] ?? '') === '
             'date' => date('Y-m-d H:i:s')
         ];
 
-        $orders = [];
-        $file = 'orders.json';
-        if (file_exists($file)) {
-            $orders = json_decode(file_get_contents($file), true) ?: [];
+        if (!$demo_mode) {
+            $orders = [];
+            $file = 'orders.json';
+            if (file_exists($file)) {
+                $orders = json_decode(file_get_contents($file), true) ?: [];
+            }
+            $orders[] = $order;
+            file_put_contents($file, json_encode($orders, JSON_PRETTY_PRINT));
+        } else {
+            $_SESSION['last_demo_order'] = $order; // Demo izleme için
         }
-        $orders[] = $order;
-        file_put_contents($file, json_encode($orders, JSON_PRETTY_PRINT));
 
         unset($_SESSION['cart']);
-        $msg = "Order successfully submitted!";
+        $msg = $demo_mode
+            ? "DEMO MODU: Sipariş kaydedilmedi, sadece simüle edildi."
+            : "Sipariş başarıyla gönderildi!";
     }
 }
 
@@ -121,6 +129,14 @@ $csrfToken = getCsrfToken();
 <body>
 <div class="container py-4">
     <h1 class="mb-4">Mini Cart</h1>
+
+	<?php if ($demo_mode): ?>
+	<div class="alert alert-warning text-center" role="alert">
+		<strong>DEMO MODU AKTİF / DEMO MODE ENABLED:</strong><br>
+		Bu sitede gönderdiğiniz siparişler <u>gerçek olarak kaydedilmez</u>. Yalnızca test amaçlıdır.<br>
+		Orders submitted on this site <u>will not be saved</u>. For demonstration purposes only.
+	</div>
+	<?php endif; ?>
 
     <?php if ($msg): ?>
         <div class="alert alert-info"><?= $msg ?></div>
