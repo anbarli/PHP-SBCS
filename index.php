@@ -219,6 +219,12 @@ $csrfToken = getCsrfToken();
     <?php else: ?>
         <p>Your cart is empty.</p>
     <?php endif; ?>
+	
+    <div class="text-center" style="margin-top: 30px;">
+        <a href="https://github.com/anbarli/PHP-SBCS" target="_blank" style="text-decoration: none; color: #1E3A8A;">
+            GitHub Projesini Görüntüle / View Project on GitHub
+        </a>
+    </div>
 </div>
 </body>
 </html>
