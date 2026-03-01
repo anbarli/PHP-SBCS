@@ -25,6 +25,11 @@ $currency = "$";
 $msg = "";
 $total = 0;
 $qtydecimaltotal = 0;
+$products = [
+    'p1' => ['name' => 'Product 1', 'price' => 1.10],
+    'p2' => ['name' => 'Product 2', 'price' => 1.20],
+    'p3' => ['name' => 'Product 3', 'price' => 1.30],
+];
 
 // Handle cart mutation actions via POST + CSRF
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action_type'] ?? '') === 'clear_cart') {
@@ -99,14 +104,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action_type'] ?? '') === '
         die("Invalid CSRF token.");
     }
 
-    $item = sanitize($_POST['item'] ?? '');
-    $price = (float) str_replace(',', '.', $_POST['price'] ?? '0');
+    $productId = (string) ($_POST['product_id'] ?? '');
     $quantity = (int) ($_POST['quantity'] ?? 0);
+    $selectedProduct = $products[$productId] ?? null;
 
-    if ($item && $price > 0 && $quantity > 0) {
+    if ($selectedProduct && $quantity > 0) {
+        $item = $selectedProduct['name'];
+        $price = (float) $selectedProduct['price'];
         $exists = false;
         foreach ($_SESSION['cart'] ?? [] as $index => $product) {
-            if ($product['item'] === $item) {
+            if (($product['product_id'] ?? null) === $productId) {
                 $_SESSION['cart'][$index]['quantity'] += $quantity;
                 $exists = true;
                 break;
@@ -115,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action_type'] ?? '') === '
 
         if (!$exists) {
             $_SESSION['cart'][] = [
+                'product_id' => $productId,
                 'item' => $item,
                 'unitprice' => $price,
                 'quantity' => $quantity
@@ -151,13 +159,12 @@ $csrfToken = getCsrfToken();
     <?php endif; ?>
 
     <div class="row mb-3">
-        <?php foreach ([['Product 1', 1.10], ['Product 2', 1.20], ['Product 3', 1.30]] as [$name, $price]): ?>
+        <?php foreach ($products as $productId => $product): ?>
             <div class="col-md-4">
                 <form method="post" action="index.php" class="card p-3">
-                    <h5><?= $name ?></h5>
-                    <p><?= number_format($price, 2) ?> <?= $currency ?></p>
-                    <input type="hidden" name="item" value="<?= $name ?>">
-                    <input type="hidden" name="price" value="<?= $price ?>">
+                    <h5><?= sanitize($product['name']) ?></h5>
+                    <p><?= number_format((float) $product['price'], 2) ?> <?= $currency ?></p>
+                    <input type="hidden" name="product_id" value="<?= $productId ?>">
                     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                     <input type="hidden" name="action_type" value="add_to_cart">
                     <input type="number" name="quantity" value="1" min="1" class="form-control mb-2">
