@@ -26,17 +26,25 @@ $msg = "";
 $total = 0;
 $qtydecimaltotal = 0;
 
-// Handle GET operations first
-if (isset($_GET['clear'])) {
+// Handle cart mutation actions via POST + CSRF
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action_type'] ?? '') === 'clear_cart') {
+    if (!validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        die("Invalid CSRF token.");
+    }
     unset($_SESSION['cart']);
     header('Location: index.php');
     exit;
 }
 
-if (isset($_GET['remove'])) {
-    $removeIndex = (int) $_GET['remove'];
-    unset($_SESSION['cart'][$removeIndex]);
-    $_SESSION['cart'] = array_values($_SESSION['cart']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action_type'] ?? '') === 'remove_item') {
+    if (!validateCsrfToken($_POST['csrf_token'] ?? '')) {
+        die("Invalid CSRF token.");
+    }
+    $removeIndex = (int) ($_POST['remove_index'] ?? -1);
+    if (isset($_SESSION['cart'][$removeIndex])) {
+        unset($_SESSION['cart'][$removeIndex]);
+        $_SESSION['cart'] = array_values($_SESSION['cart']);
+    }
     header('Location: index.php');
     exit;
 }
@@ -176,7 +184,14 @@ $csrfToken = getCsrfToken();
                     <td><?= number_format($product['unitprice'], 2) ?> <?= $currency ?></td>
                     <td><?= $product['quantity'] ?></td>
                     <td><?= number_format($lineTotal, 2) ?> <?= $currency ?></td>
-                    <td><a href="?remove=<?= $i ?>" class="btn btn-danger btn-sm">Remove</a></td>
+                    <td>
+                        <form method="post" action="index.php" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+                            <input type="hidden" name="action_type" value="remove_item">
+                            <input type="hidden" name="remove_index" value="<?= $i ?>">
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -184,7 +199,11 @@ $csrfToken = getCsrfToken();
             <tr><th colspan="2">Total</th><td><?= $qtydecimaltotal ?></td><td colspan="2"><?= number_format($total, 2) ?> <?= $currency ?></td></tr>
             </tfoot>
         </table>
-        <a href="?clear=1" class="btn btn-warning">Clear Cart</a>
+        <form method="post" action="index.php" class="d-inline">
+            <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
+            <input type="hidden" name="action_type" value="clear_cart">
+            <button type="submit" class="btn btn-warning">Clear Cart</button>
+        </form>
 
         <h3 class="mt-4">Order Form</h3>
         <form method="post" action="index.php" class="mt-3">
