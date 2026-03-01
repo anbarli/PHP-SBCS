@@ -65,6 +65,11 @@ Dikkat edilmesi gereken baslica riskler:
 - Kisisel veriler (name, email, phone, address) plain text saklanir.
 - Auth, yetkilendirme, rate limiting, audit log, merkezi izleme gibi production kontrolleri sinirlidir.
 
+Bilinen notlar (1-2-3):
+- `orders/` klasoru web root altindadir; koruma agirlikli olarak sunucu kuralina (`.htaccess`) baglidir.
+- Telefon formati ve odeme secenegi icin asil dogrulama backend tarafinda da zorunlu olmalidir (frontend tek basina yeterli degildir).
+- `error_reporting(E_ALL)` production ortaminda bilgi sizintisi riski dogurabilir.
+
 Production onerisi:
 - Siparis verilerini web root disinda veya yonetilen bir veritabaninda tutun.
 - Erisim kontrolu, sifreleme, guvenlik basliklari ve izleme katmanlari ekleyin.
@@ -141,6 +146,11 @@ Key risks for production usage:
 - `.htaccess` protections are Apache-specific; Nginx/Caddy require separate rules.
 - Personal data (name, email, phone, address) is stored in plain text.
 - Production controls such as auth, authorization, rate limiting, audit logs, and centralized monitoring are limited.
+
+Known notes (1-2-3):
+- The `orders/` directory is under web root; protection mainly depends on server rules (`.htaccess`).
+- Phone format and payment method must also be enforced by backend validation (frontend checks alone are not enough).
+- `error_reporting(E_ALL)` can expose sensitive details in production.
 
 Production recommendation:
 - Store order data outside web root or in a managed database.
