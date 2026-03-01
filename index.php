@@ -21,6 +21,79 @@ function sanitize(string $value): string {
     return htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
 }
 
+function generateOrderNumber(int $length = 8): string {
+    $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    $maxIndex = strlen($chars) - 1;
+    $value = '';
+    for ($i = 0; $i < $length; $i++) {
+        $value .= $chars[random_int(0, $maxIndex)];
+    }
+    return $value;
+}
+
+function ensureOrdersProtection(string $ordersRoot): bool {
+    if (!is_dir($ordersRoot) && !mkdir($ordersRoot, 0750, true) && !is_dir($ordersRoot)) {
+        return false;
+    }
+
+    $htaccessPath = $ordersRoot . DIRECTORY_SEPARATOR . '.htaccess';
+    if (!file_exists($htaccessPath)) {
+        $rules = "Order allow,deny\nDeny from all\n";
+        if (file_put_contents($htaccessPath, $rules) === false) {
+            return false;
+        }
+    }
+
+    $indexPath = $ordersRoot . DIRECTORY_SEPARATOR . 'index.html';
+    if (!file_exists($indexPath) && file_put_contents($indexPath, '') === false) {
+        return false;
+    }
+
+    return true;
+}
+
+function saveOrderAsPartitionedJson(array $order, string $orderNo): bool {
+    $ordersRoot = __DIR__ . DIRECTORY_SEPARATOR . 'orders';
+    if (!ensureOrdersProtection($ordersRoot)) {
+        return false;
+    }
+
+    $datePath = date('Y' . DIRECTORY_SEPARATOR . 'm' . DIRECTORY_SEPARATOR . 'd');
+    $targetDir = $ordersRoot . DIRECTORY_SEPARATOR . $datePath;
+    if (!is_dir($targetDir) && !mkdir($targetDir, 0750, true) && !is_dir($targetDir)) {
+        return false;
+    }
+
+    $fileName = $orderNo . '.json';
+    $fullPath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
+    $handle = fopen($fullPath, 'x');
+    if ($handle === false) {
+        return false;
+    }
+
+    try {
+        if (!flock($handle, LOCK_EX)) {
+            return false;
+        }
+
+        $json = json_encode($order, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        if ($json === false) {
+            return false;
+        }
+
+        $written = fwrite($handle, $json);
+        if ($written === false || $written < strlen($json)) {
+            return false;
+        }
+
+        fflush($handle);
+        return true;
+    } finally {
+        flock($handle, LOCK_UN);
+        fclose($handle);
+    }
+}
+
 $currency = "$";
 $msg = "";
 $total = 0;
@@ -79,22 +152,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action_type'] ?? '') === '
             'date' => date('Y-m-d H:i:s')
         ];
 
+        $saved = false;
+        $orderNo = '';
         if (!$demo_mode) {
-            $orders = [];
-            $file = 'orders.json';
-            if (file_exists($file)) {
-                $orders = json_decode(file_get_contents($file), true) ?: [];
+            for ($attempt = 0; $attempt < 5; $attempt++) {
+                $orderNo = generateOrderNumber(8);
+                $order['order_no'] = $orderNo;
+                $saved = saveOrderAsPartitionedJson($order, $orderNo);
+                if ($saved) {
+                    break;
+                }
             }
-            $orders[] = $order;
-            file_put_contents($file, json_encode($orders, JSON_PRETTY_PRINT));
         } else {
+            $orderNo = generateOrderNumber(8);
+            $order['order_no'] = $orderNo;
             $_SESSION['last_demo_order'] = $order; // Demo izleme için
+            $saved = true;
         }
 
-        unset($_SESSION['cart']);
-        $msg = $demo_mode
-            ? "DEMO MODU: Sipariş kaydedilmedi, sadece simüle edildi."
-            : "Sipariş başarıyla gönderildi!";
+        if ($saved) {
+            unset($_SESSION['cart']);
+            $msg = $demo_mode
+                ? "DEMO MODU: Sipariş simüle edildi. Sipariş No: {$orderNo}"
+                : "Sipariş başarıyla gönderildi. Sipariş No: {$orderNo}";
+        } else {
+            $msg = "Sipariş kaydedilemedi. Lütfen tekrar deneyin.";
+        }
     }
 }
 

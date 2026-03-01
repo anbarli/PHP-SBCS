@@ -1,3 +1,6 @@
+RewriteEngine On
+RewriteRule ^orders/ - [F,L]
+
 <Files "orders.json">
     Order allow,deny
     Deny from all
