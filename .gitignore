@@ -1,0 +1,9 @@
+# Runtime order storage. Order JSON files may contain personal data.
+orders/
+
+# Local environment and editor files.
+.env
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
